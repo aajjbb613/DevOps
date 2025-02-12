@@ -1,0 +1,55 @@
+Jenkins Notes
+
+
+Owned by Anthony Bradt
+
+Jenkins Setup:
+
+Download and deploy https://www.jenkins.io/download/
+
+Needs Java 21: Download the Latest Java LTS Free https://www.oracle.com/ca-en/java/technologies/downloads/
+
+Needs GIT installed:  Git - Downloading Package https://git-scm.com/downloads/win
+
+Needs to point Jenkins at GIT. Jenkins > Manage Jenkins > Tools GIT
+Path to GIT C:\Program Files\Git\bin\git.exe
+
+Download .NET 8.0 (Linux, macOS, and Windows) https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+
+Personal access token from github XXX
+
+Server Setup: 
+
+
+
+dotnet nuget add source "https://nuget.pkg.github.com/autoshack/index.json " `
+    --name "GitHubAutoShack"
+    --username XXXX     
+    --password XXXX
+    --store-password-in-clear-text
+ 
+
+dotnet build .\WeatherForecast.Api\WeatherForecast.Api.csproj --output \\Kap-1011\c$\temp\jenkins\11
+dotnet build WeatherForecast.Api --output C:\temp\jenkins\WeatherForcast
+dotnet build Kap.FileGenerator.Service--output C:\temp\jenkins\Kap.FileGenerator.Service
+
+ 
+Pass env variables
+*/${BRANCH}
+
+
+Github action: 
+
+name: Trigger Jenkins Build on PR
+on:
+  pull_request:
+    types: [opened]
+jobs:
+  trigger-jenkins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Jenkins Job
+        run: curl -X POST "http://JenkinsServer:8888/job/Kap.Orders.Api_Branch/build" --user "admin:XXXX"
+ 
+
+Jenkins Access:
